@@ -1,0 +1,19 @@
+# Shared settings for every experiment. Per-experiment files in
+# configs/experiments/ override these keys.
+# OWNER of the values: whole group (A keeps this file up to date).
+
+seeds: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]   # keep 10: Wilcoxon cannot reach p < 0.05 with 5 seeds
+
+split:
+  train: 0.6
+  val: 0.2
+  test: 0.2
+
+# Tuning budget, the same for every model. TODO: fix after measuring the
+# runtime of one FT-Transformer run on Colab A100 (end of week 2).
+n_trials: 30
+
+datasets: [adult, california_housing, german_credit]
+
+# Tuning happens once, on the split of this seed.
+tuning_seed: 0

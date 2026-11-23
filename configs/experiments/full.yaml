@@ -1,0 +1,4 @@
+# Sections 3.3, 3.4, 3.8: tuned models, 10 seeds (Tables 2, 3, 4).
+name: full
+models: [linear, xgboost, lightgbm, catboost, mlp, resnet, ft_transformer]
+output: results/full.csv

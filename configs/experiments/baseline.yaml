@@ -1,0 +1,5 @@
+# Section 3.2 of the report: simple baselines with default params, no tuning.
+name: baseline
+models: [dummy, linear, xgboost, mlp]
+n_trials: 0
+output: results/baseline.csv

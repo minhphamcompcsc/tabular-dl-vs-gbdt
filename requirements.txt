@@ -1,0 +1,23 @@
+# Python 3.10+
+# Version ranges keep the repo installable on Colab and on laptops.
+# The exact versions of the official run are frozen by notebooks/run_official.ipynb
+# into results/env/requirements-lock.txt (that file is what the report cites).
+
+# core (C: evaluation, statistics, scripts)
+numpy>=1.24,<3
+pandas>=2.1,<4
+scipy>=1.10,<2
+scikit-learn>=1.3,<2
+matplotlib>=3.7,<4
+pyyaml>=6.0,<7
+pytest>=7.4
+
+# A: GBDT and tuning (uncomment when src/models/gbdt.py and src/tune.py are added)
+# xgboost>=2.0
+# lightgbm>=4.0
+# catboost>=1.2
+# optuna>=3.5
+
+# B: neural networks and TabPFN (uncomment when the models are added)
+# torch>=2.1
+# tabpfn>=2.0

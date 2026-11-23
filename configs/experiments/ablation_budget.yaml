@@ -1,0 +1,7 @@
+# Section 3.5 (Figure 2): how the ranking changes with the tuning budget.
+# "null" in budgets means "use n_trials from configs/experiment.yaml".
+name: ablation_budget
+datasets: [adult]
+models: [xgboost, catboost, mlp, ft_transformer]
+budgets: [5, 15, null]
+output: results/ablation_budget.csv

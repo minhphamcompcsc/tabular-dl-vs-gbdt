@@ -1,0 +1,14 @@
+# OWNER: A (Huấn). Fill in after checking size and license of each dataset.
+# Fields are used for Table 1 of the report.
+adult:
+  task: binary
+  source: TODO (e.g. OpenML id or UCI link)
+  license: TODO
+california_housing:
+  task: regression
+  source: TODO (sklearn.datasets.fetch_california_housing)
+  license: TODO
+german_credit:
+  task: binary
+  source: TODO (e.g. OpenML "credit-g")
+  license: TODO

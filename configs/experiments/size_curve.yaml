@@ -1,0 +1,7 @@
+# Section 3.6 (Figure 3): performance vs. training set size.
+# "null" means the full training part. Tuned params from run_full are reused.
+name: size_curve
+datasets: [adult, california_housing]
+models: [xgboost, catboost, mlp, ft_transformer]
+train_sizes: [1000, 5000, 20000, null]
+output: results/size_curve.csv
