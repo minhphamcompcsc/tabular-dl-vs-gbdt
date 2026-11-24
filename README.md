@@ -27,7 +27,7 @@ pytest -q                                              # test hợp đồng, met
 
 Yêu cầu Python 3.10 trở lên. Phiên bản chính xác của lần chạy chính thức được ghi vào `results/env/requirements-lock.txt`.
 
-Trên Ubuntu hoặc WSL, nếu LightGBM báo thiếu `libgomp.so.1`, cài thư viện OpenMP của hệ thống rồi chạy lại test:
+Trên Ubuntu hoặc WSL, cài thư viện OpenMP của hệ thống:
 
 ```bash
 sudo apt install -y libgomp1
