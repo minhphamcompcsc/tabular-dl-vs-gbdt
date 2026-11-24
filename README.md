@@ -10,7 +10,7 @@ Bài tập lớn môn Học máy và Ứng dụng (CO5175). Câu hỏi chính: t
 
 | Thành viên | Phạm vi | File | Trạng thái |
 | --- | --- | --- | --- |
-| A (Huấn) | Dữ liệu, GBDT, tuning | `src/data.py`, `src/models/gbdt.py`, `src/tune.py`, `configs/datasets.yaml`, `configs/search_spaces/` | Đã triển khai và kiểm thử trên Ubuntu |
+| A (Huấn) | Dữ liệu, GBDT, tuning | `src/data.py`, `src/models/gbdt.py`, `src/tune.py`, `configs/datasets.yaml`, `configs/search_spaces/` | Đã triển khai và kiểm thử |
 | B (Thu) | Mạng nơ-ron, TabPFN | `src/models/nn.py`, `src/models/ft_transformer.py`, `src/models/tabpfn_wrapper.py`, `configs/search_spaces/` | Stub, chờ cài đặt |
 | C (Minh) | Đánh giá, thống kê, script, tài liệu | `src/metrics.py`, `src/stats.py`, `src/plots.py`, `src/runner.py`, `src/models/baseline.py`, `scripts/`, `notebooks/`, `tests/` | Đã có bản đầu |
 
