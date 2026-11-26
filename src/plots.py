@@ -3,6 +3,7 @@
 OWNER: C (Minh).
 
 Tables (Markdown + LaTeX):
+    Table 1  dataset description (rows, columns, class ratio)  -> table1_datasets
     Table 2  main results, mean +/- std over seeds         -> table2_main
     Table 3  Holm-corrected tests vs best GBDT + avg rank  -> table3_tests, table3_ranks
     Table 4  training time and number of parameters        -> table4_cost
@@ -22,6 +23,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
+import numpy as np  # noqa: E402
 import pandas as pd  # noqa: E402
 
 from src import stats  # noqa: E402
@@ -154,6 +156,29 @@ def table_cost(df: pd.DataFrame) -> pd.DataFrame:
     })
 
 
+def table_datasets(entries) -> pd.DataFrame:
+    """Table 1: one row per dataset from ``(X, y, meta)`` as returned by ``load_dataset``.
+
+    Columns: task, rows, numeric and categorical columns, share of missing
+    cells, positive-class ratio (binary only), source and license.
+    """
+    rows = []
+    for X, y, meta in entries:
+        y = np.asarray(y)
+        rows.append({
+            "Dataset": meta.name,
+            "Tác vụ": "Phân loại nhị phân" if meta.task == "binary" else "Hồi quy",
+            "Số dòng": f"{len(X):,}",
+            "Cột số": len(meta.num_cols),
+            "Cột phân loại": len(meta.cat_cols),
+            "Ô thiếu (%)": f"{100 * float(X.isna().to_numpy().mean()):.2f}",
+            "Tỉ lệ lớp 1": f"{float((y == 1).mean()):.3f}" if meta.task == "binary" else "-",
+            "Nguồn": meta.source or "-",
+            "License": (meta.license or "").strip() or "-",
+        })
+    return pd.DataFrame(rows)
+
+
 # ----------------------------------------------------------------- figures
 
 def _model_order(models) -> list[str]:
@@ -281,6 +306,6 @@ def save_table(table: pd.DataFrame, out_dir: str | Path, name: str, caption: str
 
 
 __all__ = [
-    "table_main", "table_tests", "table_ranks", "table_cost",
+    "table_datasets", "table_main", "table_tests", "table_ranks", "table_cost",
     "fig_ablation_budget", "fig_size_curve", "save_figure", "save_table",
 ]
