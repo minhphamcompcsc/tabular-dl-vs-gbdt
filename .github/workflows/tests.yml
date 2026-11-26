@@ -18,4 +18,14 @@ jobs:
           cache: pip
       - run: pip install -r requirements.txt
       - run: pytest -q
-      - run: python scripts/run_baseline.py --smoke && python scripts/make_report.py --smoke
+      - name: Smoke test (synthetic data, every script)
+        run: |
+          python scripts/run_baseline.py --smoke
+          python scripts/run_full.py --smoke
+          python scripts/run_tabpfn.py --smoke --models dummy,linear
+          python scripts/make_report.py --smoke
+          python scripts/make_dataset_table.py --smoke
+          for f in table1_datasets table2a_baseline table2_main table3_ranks table4_cost table5_tabpfn; do
+            test -f "results/smoke/tables/$f.md" || { echo "missing $f"; exit 1; }
+          done
+          test -f results/smoke/figures/fig4_tabpfn.png

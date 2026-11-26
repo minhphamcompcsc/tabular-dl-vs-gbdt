@@ -67,7 +67,9 @@ python scripts/run_baseline.py --smoke
 python scripts/run_full.py --smoke
 python scripts/run_ablation_budget.py --smoke
 python scripts/run_size_curve.py --smoke
+python scripts/run_tabpfn.py --smoke --models dummy,linear   # TabPFN thật chưa cần
 python scripts/make_report.py --smoke      # bảng và hình trong results/smoke/
+python scripts/make_dataset_table.py --smoke   # Bảng 1 trên dữ liệu giả
 ```
 
 `--smoke` dùng 2 dataset tổng hợp (`fake_binary`, `fake_regression`), 3 seed, và 2 mô hình thay thế từ scikit-learn (`sk_hgb` thay cho GBDT, `sk_mlp` thay cho mạng nơ-ron). Hai mô hình này chỉ để kiểm tra pipeline, **không đưa vào báo cáo**. Thư mục `results/smoke/` không được commit.
@@ -83,7 +85,8 @@ Các lần đo chính thức chạy trên Colab A100 bằng `notebooks/run_offic
 | `python scripts/run_ablation_budget.py` | 3.5, Hình 2 | `results/ablation_budget.csv` |
 | `python scripts/run_size_curve.py` | 3.6, Hình 3 | `results/size_curve.csv` |
 | `python scripts/run_tabpfn.py` | 3.7 | `results/tabpfn.csv` |
-| `python scripts/make_report.py` | Bảng 2, 3, 4; Hình 2, 3 | `results/tables/`, `results/figures/` |
+| `python scripts/make_report.py` | Bảng 2a (baseline), 2, 3, 4, 5 (TabPFN); Hình 2, 3, 4 (TabPFN) | `results/tables/`, `results/figures/` |
+| `python scripts/make_dataset_table.py` | Bảng 1 (mô tả dataset, cần tải dữ liệu) | `results/tables/table1_datasets.*` |
 
 Bảng LaTeX dùng `\toprule`, `\midrule`, `\bottomrule`, nên file `.tex` của báo cáo cần `\usepackage{booktabs}`.
 
@@ -145,7 +148,7 @@ Mỗi file `results/*.csv` có đúng các cột sau, mỗi dòng là một thư
 configs/          experiment.yaml (dùng chung), experiments/*.yaml (từng thí nghiệm), datasets.yaml, search_spaces/
 src/              interfaces.py (hợp đồng), data.py, tune.py, metrics.py, stats.py, plots.py,
                   runner.py, config.py, env_info.py, results_io.py, fakes.py, models/
-scripts/          run_baseline.py, run_full.py, run_ablation_budget.py, run_size_curve.py, run_tabpfn.py, make_report.py
+scripts/          run_baseline.py, run_full.py, run_ablation_budget.py, run_size_curve.py, run_tabpfn.py, make_report.py, make_dataset_table.py
 notebooks/        run_official.ipynb (chạy chính thức trên Colab)
 results/          CSV thô (commit), best_params/, tables/, figures/, env/
 tests/            test_contract.py, test_metrics.py, test_stats.py, test_pipeline.py
