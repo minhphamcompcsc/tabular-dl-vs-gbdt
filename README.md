@@ -10,7 +10,7 @@ Bài tập lớn môn Học máy và Ứng dụng (CO5175). Câu hỏi chính: t
 
 | Thành viên | Phạm vi | File | Trạng thái |
 | --- | --- | --- | --- |
-| A (Huấn) | Dữ liệu, GBDT, tuning | `src/data.py`, `src/models/gbdt.py`, `src/tune.py`, `configs/datasets.yaml`, `configs/search_spaces/` | Stub, chờ cài đặt |
+| A (Huấn) | Dữ liệu, GBDT, tuning | `src/data.py`, `src/models/gbdt.py`, `src/tune.py`, `configs/datasets.yaml`, `configs/search_spaces/` | Đã triển khai và kiểm thử |
 | B (Thu) | Mạng nơ-ron, TabPFN | `src/models/nn.py`, `src/models/ft_transformer.py`, `src/models/tabpfn_wrapper.py`, `configs/search_spaces/` | Stub, chờ cài đặt |
 | C (Minh) | Đánh giá, thống kê, script, tài liệu | `src/metrics.py`, `src/stats.py`, `src/plots.py`, `src/runner.py`, `src/models/baseline.py`, `scripts/`, `notebooks/`, `tests/` | Đã có bản đầu |
 
@@ -26,6 +26,39 @@ pytest -q                                              # test hợp đồng, met
 ```
 
 Yêu cầu Python 3.10 trở lên. Phiên bản chính xác của lần chạy chính thức được ghi vào `results/env/requirements-lock.txt`.
+
+Trên Ubuntu hoặc WSL, cài thư viện OpenMP của hệ thống:
+
+```bash
+sudo apt install -y libgomp1
+```
+
+## Dữ liệu và tiền xử lý
+
+| Dataset | Nguồn | Số mẫu × đặc trưng | Nhãn |
+| --- | --- | --- | --- |
+| Adult | [UCI, ID 2](https://archive.ics.uci.edu/dataset/2/adult) | 48.842 × 14 | Thu nhập > 50.000 USD là lớp 1 |
+| California Housing | [StatLib qua scikit-learn](https://scikit-learn.org/stable/datasets/real_world.html#california-housing-dataset) | 20.640 × 8 | Giá nhà trung vị, đơn vị 100.000 USD |
+| German Credit | [UCI, ID 144](https://archive.ics.uci.edu/dataset/144/statlog-german-credit-data) | 1.000 × 20 | Rủi ro tín dụng xấu là lớp 1 |
+
+Dữ liệu được tải tự động bằng `ucimlrepo` và scikit-learn. Split train/validation/test là 60/20/20, phân tầng cho phân loại nhị phân. `train_size` lấy mẫu con từ train sau khi chia. Bộ tiền xử lý học cách điền giá trị thiếu và mã hóa one-hot từ train. Nhánh `nn` chuẩn hóa thêm các cột số.
+
+## Chạy thử GBDT và Optuna trên Ubuntu
+
+Ví dụ này chạy XGBoost trên German Credit với một seed và 3 trial trên CPU. Tạo thư mục tạm để CSV đánh giá nằm ngoài thư mục kết quả chính thức.
+
+```bash
+tmp_dir=$(mktemp -d)
+python scripts/run_full.py \
+  --datasets german_credit \
+  --models xgboost \
+  --seeds 0 \
+  --n-trials 3 \
+  --strict \
+  --out "$tmp_dir/check.csv"
+```
+
+Optuna đọc `configs/search_spaces/<model>.yaml` và chọn tham số theo ROC-AUC validation cho phân loại hoặc RMSE validation cho hồi quy. Runner lưu JSON tham số và CSV lịch sử trial trong `results/best_params/`, rồi đánh giá trên test. Giữ cache 3 trial và CSV của lượt chạy thử ngoài commit kết quả chính thức.
 
 ## Chạy thử với dữ liệu giả (không cần phần của A và B)
 
@@ -70,7 +103,7 @@ load_dataset -> make_split(seed, train_size) -> preprocessor.fit(chỉ trên tra
 -> model.fit(train, val) -> evaluate trên test -> mỗi thước đo một dòng CSV
 ```
 
-Tuning chạy một lần trên split của seed 0 với đúng N lần thử cho mọi mô hình; tham số tốt nhất được lưu ở `results/best_params/` và dùng lại cho cả 10 seed và các thí nghiệm khác.
+Tuning chạy một lần trên split của seed 0 với đúng N lần thử cho mỗi cặp dataset–mô hình được tuning. Tham số tốt nhất được lưu ở `results/best_params/` và dùng lại cho cả 10 seed và các thí nghiệm khác.
 
 ## Hợp đồng giữa các phần
 
@@ -95,6 +128,7 @@ Mỗi file `results/*.csv` có đúng các cột sau, mỗi dòng là một thư
 `dataset, model, seed, n_trials, n_train, metric_name, metric_value, train_time_s, n_params, hardware, git_commit`
 
 - `metric_name`: `roc_auc` và `accuracy` (phân loại), `rmse` (hồi quy). Thước đo chính để xếp hạng và kiểm định: ROC-AUC và RMSE.
+- `n_params`: tổng số nút cây đối với ba GBDT. Các mô hình khác báo kích thước theo cách triển khai của từng mô hình.
 - `hardware`: tên GPU nếu mô hình đặt `device = "cuda"`, ngược lại là tên CPU.
 - `git_commit`: commit của code lúc chạy; có hậu tố `-dirty` nếu `src/`, `configs/`, `scripts/` có thay đổi chưa commit. Kết quả chính thức không được có `-dirty`.
 
@@ -140,3 +174,4 @@ Theo mục 4.4 của đề, mọi công cụ AI phải được khai báo trong 
 | Công cụ | Dùng cho phần nào | Người dùng |
 | --- | --- | --- |
 | Claude (Anthropic) | Dựng khung repo, hợp đồng giao diện, code phần C (metrics, stats, runner, plots, scripts, tests, notebook) | Minh |
+| ChatGPT (OpenAI) | Giải thích giao diện, gợi ý mã cho tải dữ liệu, chia tập, tiền xử lý, GBDT và Optuna, hỗ trợ kiểm thử | Huấn |

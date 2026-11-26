@@ -1,14 +1,22 @@
-# OWNER: A (Huấn). Fill in after checking size and license of each dataset.
-# Fields are used for Table 1 of the report.
 adult:
   task: binary
-  source: TODO (e.g. OpenML id or UCI link)
-  license: TODO
+  source: https://archive.ics.uci.edu/dataset/2/adult
+  uci_id: 2
+  license: CC BY 4.0
+  n_samples: 48842
+  n_features: 14
+
 california_housing:
   task: regression
-  source: TODO (sklearn.datasets.fetch_california_housing)
-  license: TODO
+  source: https://lib.stat.cmu.edu/datasets/houses.zip
+  license: " "
+  n_samples: 20640
+  n_features: 8
+
 german_credit:
   task: binary
-  source: TODO (e.g. OpenML "credit-g")
-  license: TODO
+  source: https://archive.ics.uci.edu/dataset/144/statlog-german-credit-data
+  uci_id: 144
+  license: CC BY 4.0
+  n_samples: 1000
+  n_features: 20
