@@ -60,6 +60,10 @@ python scripts/run_full.py \
 
 Optuna đọc `configs/search_spaces/<model>.yaml` và chọn tham số theo ROC-AUC validation cho phân loại hoặc RMSE validation cho hồi quy. Runner lưu JSON tham số và CSV lịch sử trial trong `results/best_params/`, rồi đánh giá trên test. Giữ cache 3 trial và CSV của lượt chạy thử ngoài commit kết quả chính thức.
 
+Ba GBDT dùng validation để early stopping: theo dõi AUC cho phân loại và RMSE cho hồi quy, với patience chung `gbdt_early_stopping_rounds: 50` trong `configs/experiment.yaml`. `n_estimators`/`iterations` là giới hạn tối đa. Dự đoán và `n_params` chỉ dùng các cây đến vòng validation tốt nhất; thời gian train vẫn bao gồm các vòng chờ dừng. Chính sách này áp dụng cho cả tuning và đánh giá trên từng seed.
+
+Cache GBDT mới có hậu tố `__es50_v1` (thay `50` bằng patience cấu hình), nên cache cũ không được dùng lại. Sau thay đổi này, cần tune lại và dùng CSV đầu ra mới để không trộn kết quả với thí nghiệm chưa có early stopping; cơ chế resume không tự phân biệt hai chính sách huấn luyện trong CSV cũ.
+
 ## Chạy thử với dữ liệu giả (không cần phần của A và B)
 
 ```bash

@@ -9,7 +9,7 @@ adult:
 california_housing:
   task: regression
   source: https://lib.stat.cmu.edu/datasets/houses.zip
-  license: " "
+  license: "NOASSERTION"
   n_samples: 20640
   n_features: 8
 

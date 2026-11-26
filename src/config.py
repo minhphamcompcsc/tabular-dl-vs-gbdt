@@ -17,6 +17,15 @@ SMOKE_SEEDS = [0, 1, 2]
 SMOKE_MODELS = ["dummy", "linear", "sk_hgb", "sk_mlp"]
 
 
+def gbdt_early_stopping_rounds() -> int:
+    """Read the shared policy used by both tuning and final GBDT fits."""
+    with (CONFIG_DIR / "experiment.yaml").open(encoding="utf-8") as f:
+        rounds = yaml.safe_load(f)["gbdt_early_stopping_rounds"]
+    if type(rounds) is not int or rounds < 1:
+        raise ValueError("gbdt_early_stopping_rounds must be a positive integer")
+    return rounds
+
+
 def load_config(experiment: str, config_dir: Path | str = CONFIG_DIR) -> dict[str, Any]:
     config_dir = Path(config_dir)
     with open(config_dir / "experiment.yaml", encoding="utf-8") as f:

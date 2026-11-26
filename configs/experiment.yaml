@@ -13,6 +13,9 @@ split:
 # runtime of one FT-Transformer run on Colab A100 (end of week 2).
 n_trials: 30
 
+# Shared GBDT patience; monitor validation AUC (binary) or RMSE (regression).
+gbdt_early_stopping_rounds: 50
+
 datasets: [adult, california_housing, german_credit]
 
 # Tuning happens once, on the split of this seed.

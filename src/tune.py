@@ -1,6 +1,6 @@
 """Hyperparameter tuning with Optuna, same budget for every model.
 
-OWNER: A (Huấn). Stub with the agreed signature only.
+OWNER: A (Huấn).
 
 Expected behaviour:
 1. Tune on the seed-0 split, score on the validation part with the primary
@@ -8,6 +8,12 @@ Expected behaviour:
 2. Use exactly ``n_trials`` trials for every model (fair budget).
 3. Read search spaces from ``configs/search_spaces/<model_name>.yaml``.
 4. Return the best params and the full history (one row per trial).
+
+Reads per-model YAML search spaces and runs the requested trial budget.
+Maximizes validation ROC-AUC for binary classification and minimizes
+validation RMSE for regression. GBDT models use validation-based early
+stopping. Returns the best parameters and trial history without scoring
+the test set.
 """
 from __future__ import annotations
 

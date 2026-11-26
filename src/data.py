@@ -1,10 +1,6 @@
 """Datasets, splitting and preprocessing.
 
-OWNER: A (Huấn). This file is a stub that only fixes the function signatures
-from ``src/interfaces.py``. Replace the bodies with the real implementation.
-
-Until this file is implemented, scripts can still run on the synthetic
-datasets ``fake_binary`` and ``fake_regression`` (see ``src/fakes.py``).
+OWNER: A (Huấn).
 
 Checklist for A (also checked by ``tests/test_contract.py``):
 1. ``load_dataset`` returns y as np.ndarray; for "binary" the labels are 0/1.
@@ -12,6 +8,12 @@ Checklist for A (also checked by ``tests/test_contract.py``):
    for "binary", deterministic for a given seed. ``train_size`` subsamples the
    train part only (val and test stay the same for that seed).
 3. ``build_preprocessor`` is fitted on the train part only (no leakage).
+
+Loads Adult, California Housing and German Credit with dataset metadata.
+Creates deterministic train/validation/test splits from the shared config,
+with stratification for binary targets and optional train-only subsampling.
+Builds unfitted preprocessing pipelines for GBDT and neural networks;
+callers must fit them on training data only.
 """
 from __future__ import annotations
 

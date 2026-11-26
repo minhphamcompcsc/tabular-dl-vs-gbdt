@@ -16,6 +16,7 @@ from types import ModuleType
 from typing import Any, Callable
 
 from src import env_info, fakes
+from src.config import gbdt_early_stopping_rounds
 from src.interfaces import Part, Split
 from src.metrics import evaluate
 from src.models import build_model
@@ -124,7 +125,9 @@ def run_grid(datasets: list[str], models: list[str], seeds: list[int], output: s
 # ---------------------------------------------------------------- best params
 
 def best_params_path(dataset: str, model_name: str, n_trials: int) -> Path:
-    return BEST_PARAMS_DIR / f"{dataset}__{model_name}__n{n_trials}.json"
+    policy = (f"__es{gbdt_early_stopping_rounds()}_v1"
+              if model_name in {"xgboost", "lightgbm", "catboost"} else "")
+    return BEST_PARAMS_DIR / f"{dataset}__{model_name}__n{n_trials}{policy}.json"
 
 
 def save_best_params(dataset: str, model_name: str, n_trials: int, params: dict) -> Path:
@@ -158,6 +161,7 @@ def get_or_tune(dataset: str, model_name: str, n_trials: int, tuning_seed: int =
     log(f"[tune] {dataset}/{model_name} with {n_trials} trials")
     best, history = tune(model_name, dataset, n_trials, seed=tuning_seed)
     save_best_params(dataset, model_name, n_trials, best)
-    hist_path = BEST_PARAMS_DIR / f"{dataset}__{model_name}__n{n_trials}__history.csv"
+    path = best_params_path(dataset, model_name, n_trials)
+    hist_path = path.with_name(f"{path.stem}__history.csv")
     history.to_csv(hist_path, index=False)
     return best
